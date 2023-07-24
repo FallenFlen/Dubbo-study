@@ -5,8 +5,15 @@
     <groupId>com.flz.mydubbo</groupId>
     <artifactId>with-springboot</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>api</module>
+        <module>consumer</module>
+        <module>provider</module>
+    </modules>
     <name>dubbo-study</name>
     <description>Demo project for Apache Dubbo</description>
+    <packaging>pom</packaging>
+
     <properties>
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,29 +23,25 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo-dependencies-zookeeper</artifactId>
-            <type>pom</type>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo-spring-boot-starter</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.flz.mydubbo</groupId>
+                <artifactId>api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.0</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.flz.mydubbo</groupId>
+                <artifactId>common</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
