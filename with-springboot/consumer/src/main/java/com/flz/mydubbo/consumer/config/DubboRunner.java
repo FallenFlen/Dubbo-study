@@ -1,38 +1,41 @@
 package com.flz.mydubbo.consumer.config;
 
 import com.flz.mydubbo.api.AsyncApi;
+import com.flz.mydubbo.api.ContextApi;
 import com.flz.mydubbo.api.HelloApi;
+import com.flz.mydubbo.common.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.rpc.RpcContext;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
 public class DubboRunner implements CommandLineRunner {
-    @DubboReference(group = "HelloApi",version = "v1")
+    @DubboReference(group = "HelloApi", version = "v1")
     private HelloApi helloApiV1;
-    @DubboReference(group = "HelloApi",version = "v2")
+    @DubboReference(group = "HelloApi", version = "v2")
     private HelloApi helloApiV2;
     @DubboReference
     private AsyncApi asyncApi;
+    @DubboReference(group = "ContextApi", version = "v1")
+    private ContextApi contextApi;
 
     @Override
     public void run(String... args) throws Exception {
         new Thread(() -> {
             while (true) {
                 try {
-                    String response = helloApiV1.getHelloInfo("respect");
-                    log.info("Receive hello(v1) rpc result:{}", response);
-                    String responseV2 = helloApiV2.getHelloInfo("respect");
-                    log.info("Receive hello(v2) rpc result:{}", responseV2);
-
+                    // hello
+//                    callHelloApi();
                     // async
-                    asyncApi.fetchAsyncInfo("async").thenAcceptAsync(s -> log.info("Receive async hello rpc result:{}", s));
-                    String asyncContextResult = asyncApi.fetchAsyncInfoWithAsyncContext("async context");
-                    System.out.println(asyncContextResult);
+//                    callAsyncApi();
+                    // context
+                    callContextApi();
 
                     TimeUnit.SECONDS.sleep(1L);
                 } catch (InterruptedException e) {
@@ -40,5 +43,28 @@ public class DubboRunner implements CommandLineRunner {
                 }
             }
         }).start();
+    }
+
+    private void callContextApi() {
+        // 向服务端传参
+        RpcContext.getClientAttachment().setAttachment("clientParam", "respect-client");
+        String response = contextApi.transferParam("Here is client");
+        // 接收服务端的回参
+        log.info("ContextApi response:{}", response);
+        Map<String, Object> responseParam = RpcContext.getServerContext().getObjectAttachments();
+        log.info("ContextApi response param:{}", JsonUtils.silentConvertToStr(responseParam));
+    }
+
+    private void callHelloApi() {
+        String response = helloApiV1.getHelloInfo("respect");
+        log.info("Receive hello(v1) rpc result:{}", response);
+        String responseV2 = helloApiV2.getHelloInfo("respect");
+        log.info("Receive hello(v2) rpc result:{}", responseV2);
+    }
+
+    private void callAsyncApi() {
+        asyncApi.fetchAsyncInfo("async").thenAcceptAsync(s -> log.info("Receive async hello rpc result:{}", s));
+        String asyncContextResult = asyncApi.fetchAsyncInfoWithAsyncContext("async context");
+        log.info(asyncContextResult);
     }
 }
