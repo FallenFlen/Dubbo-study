@@ -9,6 +9,7 @@
         <module>api</module>
         <module>consumer</module>
         <module>provider</module>
+        <module>provider2</module>
     </modules>
     <name>dubbo-study</name>
     <description>Demo project for Apache Dubbo</description>
