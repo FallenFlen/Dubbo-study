@@ -48,11 +48,14 @@ public class DubboRunner implements CommandLineRunner {
     private void callContextApi() {
         // 向服务端传参
         RpcContext.getClientAttachment().setAttachment("clientParam", "respect-client");
+        log.info("Client attachment before getting response:{}", JsonUtils.silentConvertToStr(RpcContext.getClientAttachment().getObjectAttachments()));
         String response = contextApi.transferParam("Here is client");
         // 接收服务端的回参
         log.info("ContextApi response:{}", response);
         Map<String, Object> responseParam = RpcContext.getServerContext().getObjectAttachments();
         log.info("ContextApi response param:{}", JsonUtils.silentConvertToStr(responseParam));
+        // 在调用后，RpcContext信息被清除
+        log.info("Client attachment after getting response:{}", JsonUtils.silentConvertToStr(RpcContext.getClientAttachment().getObjectAttachments()));
     }
 
     private void callHelloApi() {
