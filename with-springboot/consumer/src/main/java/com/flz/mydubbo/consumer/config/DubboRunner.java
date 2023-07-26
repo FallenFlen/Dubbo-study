@@ -5,8 +5,12 @@ import com.flz.mydubbo.api.ContextApi;
 import com.flz.mydubbo.api.HelloApi;
 import com.flz.mydubbo.common.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.common.config.ReferenceCache;
+import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.utils.SimpleReferenceCache;
 import org.apache.dubbo.rpc.RpcContext;
+import org.apache.dubbo.rpc.service.GenericService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +39,9 @@ public class DubboRunner implements CommandLineRunner {
                     // async
 //                    callAsyncApi();
                     // context
-                    callContextApi();
+//                    callContextApi();
+                    // generic
+                    callGenericApi();
 
                     TimeUnit.SECONDS.sleep(1L);
                 } catch (InterruptedException e) {
@@ -43,6 +49,29 @@ public class DubboRunner implements CommandLineRunner {
                 }
             }
         }).start();
+    }
+
+    private void callGenericApi() {
+        GenericService genericService = buildGenericService("com.flz.mydubbo.api.HelloApi", "HelloApi", "v1");
+        //传入需要调用的方法，参数类型列表，参数列表
+        Object result = genericService.$invoke("getHelloInfo", new String[]{"java.lang.String"}, new Object[]{"g1"});
+        log.info("GenericService response:{}", JsonUtils.silentConvertToStr(result));
+    }
+
+    private GenericService buildGenericService(String interfaceClass, String group, String version) {
+        ReferenceConfig<GenericService> reference = new ReferenceConfig<>();
+        reference.setInterface(interfaceClass);
+        reference.setVersion(version);
+        //开启泛化调用
+        reference.setGeneric("true");
+        reference.setTimeout(60000);
+        reference.setGroup(group);
+        ReferenceCache cache = SimpleReferenceCache.getCache();
+        try {
+            return cache.get(reference);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     private void callContextApi() {
