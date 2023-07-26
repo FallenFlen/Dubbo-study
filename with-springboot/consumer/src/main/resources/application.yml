@@ -6,6 +6,8 @@ dubbo:
     port: -1
   registry:
     address: zookeeper://${zookeeper.host}:${zookeeper.port}
+  consumer:
+    timeout: 60000
 
 zookeeper:
   host: 192.168.39.233
