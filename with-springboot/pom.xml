@@ -10,7 +10,7 @@
         <module>consumer</module>
         <module>provider</module>
         <module>provider2</module>
-        <module>service</module>
+        <module>business-service</module>
     </modules>
     <name>dubbo-study</name>
     <description>Demo project for Apache Dubbo</description>

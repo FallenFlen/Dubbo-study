@@ -1,0 +1,21 @@
+
+
+dubbo:
+  application:
+    name: business-service
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    address: zookeeper://${zookeeper.host}:${zookeeper.port}
+
+zookeeper:
+  host: 192.168.39.233
+  port: 2181
+
+spring:
+  application:
+    name: business-service
+
+server:
+  port: 8080
