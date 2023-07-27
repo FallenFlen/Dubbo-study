@@ -4,16 +4,13 @@ dubbo:
   protocol:
     name: dubbo
     port: -1
-  registry:
+  registry: #注册中心
     address: nacos://${nacos.host}:${nacos.port}
-  metadata-report:
+  metadata-report: #将元数据信息（接口参数名字，类型）等注册到nacos
     address: nacos://${nacos.host}:${nacos.port}
-#    address: zookeeper://${zookeeper.host}:${zookeeper.port}
+  config-center: #配置中心
+    address: nacos://${nacos.host}:${nacos.port}
 
 nacos:
   host: 192.168.39.233
   port: 8848
-
-zookeeper:
-  host: 192.168.39.233
-  port: 2181
