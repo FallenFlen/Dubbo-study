@@ -10,6 +10,8 @@ dubbo:
     address: nacos://${nacos.host}:${nacos.port}
   config-center: #配置中心
     address: nacos://${nacos.host}:${nacos.port}
+  provider:
+    filter: providerTraceFilter
 
 nacos:
   host: 192.168.39.233

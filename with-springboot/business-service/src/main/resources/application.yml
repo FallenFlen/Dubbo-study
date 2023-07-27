@@ -8,11 +8,8 @@ dubbo:
     address: nacos://${nacos.host}:${nacos.port}
   metadata-report:
     address: nacos://${nacos.host}:${nacos.port}
-#    address: zookeeper://${zookeeper.host}:${zookeeper.port}
-
-zookeeper:
-  host: 192.168.39.233
-  port: 2181
+  consumer:
+    filter: consumerTraceFilter
 
 nacos:
   host: 192.168.39.233
