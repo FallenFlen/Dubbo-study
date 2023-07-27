@@ -5,7 +5,12 @@ dubbo:
     name: dubbo
     port: -1
   registry:
-    address: zookeeper://${zookeeper.host}:${zookeeper.port}
+    address: nacos://${nacos.host}:${nacos.port}
+#    address: zookeeper://${zookeeper.host}:${zookeeper.port}
+
+nacos:
+  host: 192.168.39.233
+  port: 8848
 
 zookeeper:
   host: 192.168.39.233
